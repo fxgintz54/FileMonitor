@@ -8,12 +8,14 @@ namespace FileMonitor
 {
     class DirectoryConfig
     {
-        public DirectoryConfig(int frequency, string pattern)
+        public DirectoryConfig(string name, int frequency, string pattern)
         {
+            Name = name;
             Frequency = frequency;
             Pattern = pattern;
         }
 
+        public string Name { get; }
         public int Frequency { get; }
         public string Pattern { get; }
 
