@@ -8,16 +8,26 @@ namespace FileMonitor
 {
     class DirectoryConfig
     {
-        public DirectoryConfig(string name, int frequency, string pattern)
+        
+        public DirectoryConfig(string id, FrequencyDays frequency, string fileNamePattern)
         {
-            Name = name;
+            Id = id;
             Frequency = frequency;
-            Pattern = pattern;
+            FileNamePattern = fileNamePattern;
         }
 
-        public string Name { get; }
-        public int Frequency { get; }
-        public string Pattern { get; }
+        
+        // full path of the directory
+        public string Id { get; }
+        public FrequencyDays Frequency { get; }
+        public string FileNamePattern { get; }
 
+    }
+
+    enum FrequencyDays : int
+    {
+        Monthly = 30,
+        Quarterly = 90,
+        Yearly = 360
     }
 }
