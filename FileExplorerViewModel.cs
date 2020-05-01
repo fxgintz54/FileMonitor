@@ -16,6 +16,12 @@ namespace FileMonitor
     class FileExplorerViewModel : IFileExplorerViewModel
     {
         const string documentsDirecory = "C:\\Users\\franc\\Documents\\e-Documents";
+        private static DirectoryService _DirectoryService;
+
+        public FileExplorerViewModel(DirectoryService directoryService)
+        {
+            _DirectoryService = directoryService;
+        }
 
         public DirectoryTree CreateDirectoryTree()
         {
@@ -26,15 +32,20 @@ namespace FileMonitor
 
         private static DirectoryNode CreateDirectoryNode(DirectoryInfo directoryInfo)
         {
-            var myDirectoryNode = new DirectoryNode(directoryInfo.Name, new DateTime(), true, false);
+            var myDirectoryNode = new DirectoryNode(directoryInfo.Name, new DateTime(), false, false);
             foreach (var directory in directoryInfo.GetDirectories())
                 myDirectoryNode.Children.Add(CreateDirectoryNode(directory));
+            if (directoryInfo.GetFiles().Length > 0)
+                myDirectoryNode.IsMonitoredDirectory = true;
             foreach (var file in directoryInfo.GetFiles())
             {
-                if (file.LastWriteTime > myDirectoryNode.Timestamp)
-                    myDirectoryNode.Timestamp = file.LastWriteTime;
-                myDirectoryNode.Children.Add(new DirectoryNode(file.Name, file.LastWriteTime, false, true));
+                DateTime fileTimestamp = _DirectoryService.FileTimestamp(file);
+                if (fileTimestamp > myDirectoryNode.Timestamp)
+                    myDirectoryNode.Timestamp = fileTimestamp;
+                myDirectoryNode.Children.Add(new DirectoryNode(file.Name, fileTimestamp, false, true));
             }
+            bool directoryIsUpToDate = _DirectoryService.DirectoryIsUpToDate(myDirectoryNode);
+            myDirectoryNode.IsUpToDate = directoryIsUpToDate;
             return myDirectoryNode;
         }
     }

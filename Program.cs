@@ -16,7 +16,8 @@ namespace FileMonitor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var vm = new FileExplorerViewModel();
+            var ds = new DirectoryService(); 
+            var vm = new FileExplorerViewModel(ds);
             Application.Run(new FileExplorerForm(vm));
         }
     }

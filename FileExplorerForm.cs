@@ -30,14 +30,50 @@ namespace FileMonitor
 
         private TreeNode LoadTreeViewNode(DirectoryNode directoryNode)
         {
-            string daysOld = "";
-            if ((directoryNode.Timestamp - new DateTime()).TotalDays > 0)
-                daysOld = "( " + Convert.ToInt32((DateTime.Now - directoryNode.Timestamp).TotalDays).ToString() + " days old)";
-            var myTreeNode = new TreeNode(directoryNode.Name + daysOld);
-            myTreeNode.BackColor = directoryNode.IsDirectory ? (directoryNode.IsUpToDate ? Color.LimeGreen : Color.Tomato) : Color.Transparent;
+            var myTreeNode = new TreeNode(directoryNode.Name + DaysOldStringBuilder(directoryNode));
+            myTreeNode.BackColor = directoryNode.IsMonitoredDirectory ? (directoryNode.IsUpToDate ? Color.LimeGreen : Color.Tomato) : Color.Transparent;
             foreach (var child in directoryNode.Children)
                 myTreeNode.Nodes.Add(LoadTreeViewNode(child));
             return myTreeNode;
+        }
+
+        private string DaysOldStringBuilder(DirectoryNode directoryNode)
+        {
+            string daysOldString = ""; 
+            if (!directoryNode.IsMonitoredDirectory)
+                return daysOldString;
+            int TotalDaysOld = Convert.ToInt32((DateTime.Now - directoryNode.Timestamp).TotalDays);
+            int daysOld, monthsOld, yearsOld;
+            string dayLabel, monthLabel, yearLabel;
+            if (TotalDaysOld > 0)
+                if (TotalDaysOld > 365)
+                {
+                    yearsOld = Convert.ToInt32(TotalDaysOld / 365);
+                    yearLabel = yearsOld > 1 ? "years" : "year";
+                    monthsOld = Convert.ToInt32((TotalDaysOld % 365)/30);
+                    monthLabel = monthsOld > 1 ? "months" : "month";
+                    if (monthsOld > 0)
+                        daysOldString = " (" + yearsOld + " " + yearLabel + " and " + monthsOld + " " + monthLabel + " old)";
+                    else
+                        daysOldString = " (" + yearsOld + " " + yearLabel + " old)";
+                }
+                else if (TotalDaysOld > 30)
+                {
+                    monthsOld = Convert.ToInt32(TotalDaysOld / 30);
+                    monthLabel = monthsOld > 1 ? "months" : "month";
+                    daysOld = Convert.ToInt32(TotalDaysOld % 30);
+                    dayLabel = daysOld > 1 ? "days" : "day";
+                    if (daysOld > 0)
+                        daysOldString = " (" + monthsOld + " " + monthLabel + " and " + daysOld + " " + dayLabel + " old)";
+                    else
+                        daysOldString = " (" + monthsOld + " " + monthLabel + " old)";
+                }
+                else
+                    if (TotalDaysOld > 1)
+                        daysOldString = " (" + TotalDaysOld + " days old)";
+                    else
+                        daysOldString = " (" + TotalDaysOld + " day old)";
+            return daysOldString;
         }
         
     }

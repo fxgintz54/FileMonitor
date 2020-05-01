@@ -20,11 +20,11 @@ namespace FileMonitor
 
     public class DirectoryNode
     {
-        public DirectoryNode(string name, DateTime timestamp, bool isDirectory, bool isUpToDate)
+        public DirectoryNode(string name, DateTime timestamp, bool isMonitoredDirectory, bool isUpToDate)
         {
             Name = name;
             Timestamp = timestamp;
-            IsDirectory = isDirectory;
+            IsMonitoredDirectory = isMonitoredDirectory;
             IsUpToDate = isUpToDate;
             Children = new List<DirectoryNode>();
         }
@@ -32,9 +32,9 @@ namespace FileMonitor
         public string Name { get; set; }
 
         public DateTime Timestamp { get; set; }
-        public bool IsDirectory { get; }
+        public bool IsMonitoredDirectory { get; set; }
 
-        public bool IsUpToDate { get; }
+        public bool IsUpToDate { get; set; }
 
         public List<DirectoryNode> Children { get; }
     }
