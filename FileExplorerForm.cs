@@ -30,7 +30,10 @@ namespace FileMonitor
 
         private TreeNode LoadTreeViewNode(DirectoryNode directoryNode)
         {
-            var myTreeNode = new TreeNode(directoryNode.Name);
+            string daysOld = "";
+            if ((directoryNode.Timestamp - new DateTime()).TotalDays > 0)
+                daysOld = "( " + Convert.ToInt32((DateTime.Now - directoryNode.Timestamp).TotalDays).ToString() + " days old)";
+            var myTreeNode = new TreeNode(directoryNode.Name + daysOld);
             myTreeNode.BackColor = directoryNode.IsDirectory ? (directoryNode.IsUpToDate ? Color.LimeGreen : Color.Tomato) : Color.Transparent;
             foreach (var child in directoryNode.Children)
                 myTreeNode.Nodes.Add(LoadTreeViewNode(child));

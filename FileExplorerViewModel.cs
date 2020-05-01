@@ -26,11 +26,15 @@ namespace FileMonitor
 
         private static DirectoryNode CreateDirectoryNode(DirectoryInfo directoryInfo)
         {
-            var myDirectoryNode = new DirectoryNode(directoryInfo.Name, true, false);
+            var myDirectoryNode = new DirectoryNode(directoryInfo.Name, new DateTime(), true, false);
             foreach (var directory in directoryInfo.GetDirectories())
                 myDirectoryNode.Children.Add(CreateDirectoryNode(directory));
             foreach (var file in directoryInfo.GetFiles())
-                myDirectoryNode.Children.Add(new DirectoryNode(file.Name, false, true));
+            {
+                if (file.LastWriteTime > myDirectoryNode.Timestamp)
+                    myDirectoryNode.Timestamp = file.LastWriteTime;
+                myDirectoryNode.Children.Add(new DirectoryNode(file.Name, file.LastWriteTime, false, true));
+            }
             return myDirectoryNode;
         }
     }
