@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DaysOldStringBuilder.cs" />
     <Compile Include="DirectoryConfig.cs" />
     <Compile Include="DirectoryService.cs" />
     <Compile Include="DirectoryTree.cs" />
