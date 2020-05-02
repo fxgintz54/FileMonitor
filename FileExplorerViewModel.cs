@@ -16,11 +16,11 @@ namespace FileMonitor
     class FileExplorerViewModel : IFileExplorerViewModel
     {
         const string documentsDirecory = "C:\\Users\\franc\\Documents\\e-Documents";
-        private static DirectoryService _DirectoryService;
+        private DirectoryService _directoryService;
 
         public FileExplorerViewModel(DirectoryService directoryService)
         {
-            _DirectoryService = directoryService;
+            _directoryService = directoryService;
         }
 
         public DirectoryTree CreateDirectoryTree()
@@ -30,7 +30,7 @@ namespace FileMonitor
             return myDirectoryTree;
         }
 
-        private static DirectoryNode CreateDirectoryNode(DirectoryInfo directoryInfo)
+        private DirectoryNode CreateDirectoryNode(DirectoryInfo directoryInfo)
         {
             var myDirectoryNode = new DirectoryNode(directoryInfo.Name, new DateTime(), false, false);
             foreach (var directory in directoryInfo.GetDirectories())
@@ -39,12 +39,12 @@ namespace FileMonitor
                 myDirectoryNode.IsMonitoredDirectory = true;
             foreach (var file in directoryInfo.GetFiles())
             {
-                DateTime fileTimestamp = _DirectoryService.FileTimestamp(file);
+                DateTime fileTimestamp = _directoryService.FileTimestamp(file);
                 if (fileTimestamp > myDirectoryNode.Timestamp)
                     myDirectoryNode.Timestamp = fileTimestamp;
                 myDirectoryNode.Children.Add(new DirectoryNode(file.Name, fileTimestamp, false, true));
             }
-            bool directoryIsUpToDate = _DirectoryService.DirectoryIsUpToDate(myDirectoryNode);
+            bool directoryIsUpToDate = _directoryService.DirectoryIsUpToDate(myDirectoryNode);
             myDirectoryNode.IsUpToDate = directoryIsUpToDate;
             return myDirectoryNode;
         }
