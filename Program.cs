@@ -18,7 +18,8 @@ namespace FileMonitor
             Application.SetCompatibleTextRenderingDefault(false);
             var ds = new DirectoryService(); 
             var vm = new FileExplorerViewModel(ds);
-            Application.Run(new FileExplorerForm(vm));
+            var sb = new DaysOldStringBuilder();
+            Application.Run(new FileExplorerForm(vm, sb));
         }
     }
 }
